@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 	"errors"
-	"gocrudssample/domain/tutorial/mocks"
-	"gocrudssample/domain/tutorial/model"
+	"gocrudsample/domain/tutorial/mocks"
+	"gocrudsample/domain/tutorial/model"
 	"testing"
 
 	"github.com/stretchr/testify/mock"

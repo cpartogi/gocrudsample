@@ -2,12 +2,12 @@ package http
 
 import (
 	"errors"
-	"gocrudssample/domain/tutorial/mocks"
+	"gocrudsample/domain/tutorial/mocks"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

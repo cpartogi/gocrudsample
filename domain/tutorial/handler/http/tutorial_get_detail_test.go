@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"gocrudssample/domain/tutorial/mocks"
-	"gocrudssample/schema/response"
+	"gocrudsample/domain/tutorial/mocks"
+	"gocrudsample/schema/response"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

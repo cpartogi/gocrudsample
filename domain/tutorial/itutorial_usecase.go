@@ -2,8 +2,8 @@ package tutorial
 
 import (
 	"context"
-	"gocrudssample/domain/tutorial/model"
-	response "gocrudssample/schema/response"
+	"gocrudsample/domain/tutorial/model"
+	response "gocrudsample/schema/response"
 )
 
 type TutorialUsecaseInterface interface {

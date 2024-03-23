@@ -1,16 +1,16 @@
 package main
 
 import (
-	"gocrudssample/domain/tutorial/repo"
-	appInit "gocrudssample/init"
+	"gocrudsample/domain/tutorial/repo"
+	appInit "gocrudsample/init"
 	"net/http"
 	"time"
 
-	handler "gocrudssample/domain/tutorial/handler/http"
-	usecase "gocrudssample/domain/tutorial/usecase"
+	handler "gocrudsample/domain/tutorial/handler/http"
+	usecase "gocrudsample/domain/tutorial/usecase"
 
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
 	log "go.uber.org/zap"
 )
@@ -63,8 +63,6 @@ func main() {
 	// End of DI Stepss
 
 	handler.NewTutorialHandler(e, tutorialUc)
-
-	//e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// start serve
 	e.Logger.Fatal(e.Start(viper.GetString("api.port")))

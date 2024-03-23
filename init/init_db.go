@@ -2,7 +2,7 @@ package init
 
 import (
 	"fmt"
-	"gocrudssample/lib/pkg/db"
+	"gocrudsample/lib/pkg/db"
 	"os"
 
 	"github.com/go-pg/pg"

@@ -3,7 +3,7 @@ package init
 import (
 	"strings"
 
-	"gocrudssample/lib/pkg/utils"
+	"gocrudsample/lib/pkg/utils"
 
 	"github.com/spf13/viper"
 	log "go.uber.org/zap"

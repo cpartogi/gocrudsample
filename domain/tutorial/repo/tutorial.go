@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"time"
 
-	"gocrudssample/domain/tutorial"
-	"gocrudssample/domain/tutorial/model"
-	"gocrudssample/lib/constant"
+	"gocrudsample/domain/tutorial"
+	"gocrudsample/domain/tutorial/model"
+	"gocrudsample/lib/constant"
 
 	"github.com/go-pg/pg"
 	"github.com/go-redis/redis"

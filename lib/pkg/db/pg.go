@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"gocrudssample/lib/pkg/utils"
+	"gocrudsample/lib/pkg/utils"
 	"log"
 	"time"
 

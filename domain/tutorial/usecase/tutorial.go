@@ -2,12 +2,12 @@ package usecase
 
 import (
 	"context"
-	"gocrudssample/domain/tutorial"
-	"gocrudssample/domain/tutorial/model"
-	response "gocrudssample/schema/response"
+	"gocrudsample/domain/tutorial"
+	"gocrudsample/domain/tutorial/model"
+	response "gocrudsample/schema/response"
 	"time"
 
-	"gocrudssample/lib/constant"
+	"gocrudsample/lib/constant"
 
 	"github.com/google/uuid"
 )

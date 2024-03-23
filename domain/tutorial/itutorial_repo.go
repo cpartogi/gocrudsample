@@ -2,7 +2,7 @@ package tutorial
 
 import (
 	"context"
-	"gocrudssample/domain/tutorial/model"
+	"gocrudsample/domain/tutorial/model"
 )
 
 type TutorialRepoInterface interface {

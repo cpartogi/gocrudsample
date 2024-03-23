@@ -1,16 +1,16 @@
 package http
 
 import (
-	"gocrudssample/domain/tutorial"
-	"gocrudssample/domain/tutorial/model"
+	"gocrudsample/domain/tutorial"
+	"gocrudsample/domain/tutorial/model"
 
-	"gocrudssample/lib/constant"
+	"gocrudsample/lib/constant"
 
-	"gocrudssample/lib/pkg/utils"
+	"gocrudsample/lib/pkg/utils"
 
-	"github.com/labstack/echo"
+	"gocrudsample/schema/request"
 
-	"gocrudssample/schema/request"
+	"github.com/labstack/echo/v4"
 )
 
 type TutorialHandler struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"gocrudssample/lib/constant"
+	"gocrudsample/lib/constant"
 )
 
 var commonErrorMap = map[error]int{

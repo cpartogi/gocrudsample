@@ -1,6 +1,6 @@
 package utils
 
-import "gocrudssample/lib/helper"
+import "gocrudsample/lib/helper"
 
 func errorType(err error) (int, error) {
 	return helper.CommonError(err)
