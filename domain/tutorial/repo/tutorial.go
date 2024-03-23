@@ -265,3 +265,36 @@ func (r *TutorialRepo) DeleteTutorial(ctx context.Context, tutorial model.Tutori
 	return
 
 }
+
+func (r *TutorialRepo) PatchTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	tx, err := r.gopg.Begin()
+	if err != nil {
+		return
+	}
+
+	_, err = tx.ModelContext(ctx, &tutorial).Column("title").WherePK().Update()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// delete redis
+	tutorialKey := `tutorial_%s`
+
+	key := fmt.Sprintf(tutorialKey, tutorial.Id)
+
+	_, err = r.rdb.Del(key).Result()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return
+	}
+
+	return
+
+}

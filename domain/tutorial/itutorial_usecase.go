@@ -13,4 +13,5 @@ type TutorialUsecaseInterface interface {
 	AddTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 	UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 	DeleteTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
+	PatchTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 }

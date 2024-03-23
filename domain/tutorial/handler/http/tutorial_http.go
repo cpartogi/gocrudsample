@@ -27,8 +27,9 @@ func NewTutorialHandler(e *echo.Echo, us tutorial.TutorialUsecaseInterface) {
 	e.GET("/tutorials", handler.GetTutorials)
 
 	e.POST("/tutorials", handler.Addtutorial)
-	e.PUT("/tutorials/:tutorial_id", handler.Updatetutorial)
+	e.PUT("/tutorials/:tutorial_id", handler.UpdateTutorial)
 	e.DELETE("/tutorials/:tutorial_id", handler.DeleteTutorial)
+	e.PATCH("/tutorials/:tutorial_id", handler.PatchTutorial)
 }
 
 func (h *TutorialHandler) GetDetailTutorial(c echo.Context) error {
@@ -95,7 +96,7 @@ func (h *TutorialHandler) Addtutorial(c echo.Context) error {
 
 }
 
-func (h *TutorialHandler) Updatetutorial(c echo.Context) error {
+func (h *TutorialHandler) UpdateTutorial(c echo.Context) error {
 	ctx := c.Request().Context()
 	var req request.AddTutorial
 	c.Bind(&req)
@@ -130,6 +131,27 @@ func (h *TutorialHandler) DeleteTutorial(c echo.Context) error {
 	}
 
 	err := h.tutorialUsecase.DeleteTutorial(ctx, tutorialsData)
+	if err != nil {
+		return utils.ErrorResponse(c, err, map[string]interface{}{})
+	}
+
+	return utils.SuccessResponse(c, constant.SuccessDeleteData, "")
+
+}
+
+func (h *TutorialHandler) PatchTutorial(c echo.Context) error {
+	ctx := c.Request().Context()
+	var req request.PatchTutorial
+	c.Bind(&req)
+
+	tutorialId := c.Param("tutorial_id")
+
+	tutorialsData := model.Tutorials{
+		Id:    tutorialId,
+		Title: req.Title,
+	}
+
+	err := h.tutorialUsecase.PatchTutorial(ctx, tutorialsData)
 	if err != nil {
 		return utils.ErrorResponse(c, err, map[string]interface{}{})
 	}

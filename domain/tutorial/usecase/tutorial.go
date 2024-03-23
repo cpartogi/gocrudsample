@@ -210,3 +210,26 @@ func (u *TutorialUsecase) DeleteTutorial(ctx context.Context, tutorial model.Tut
 
 	return
 }
+
+func (u *TutorialUsecase) PatchTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	// validation
+	_, err = uuid.Parse(tutorial.Id)
+	if err != nil {
+		return constant.ErrInvalidUuid
+	}
+
+	updatedAt := time.Now().UTC()
+	updatedBy := "Admin"
+
+	tutorial.UpdatedAt = &updatedAt
+	tutorial.UpdatedBy = &updatedBy
+
+	err = u.tutorialRepo.PatchTutorial(ctx, tutorial)
+
+	if err != nil {
+		return
+	}
+
+	return
+}

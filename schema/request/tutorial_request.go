@@ -7,3 +7,7 @@ type AddTutorial struct {
 	Keywords       string `json:"keywords"`
 	Description    string `json:"description"`
 }
+
+type PatchTutorial struct {
+	Title string `json:"title"`
+}
