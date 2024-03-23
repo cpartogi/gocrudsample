@@ -28,6 +28,7 @@ func NewTutorialHandler(e *echo.Echo, us tutorial.TutorialUsecaseInterface) {
 
 	e.POST("/tutorials", handler.Addtutorial)
 	e.PUT("/tutorials/:tutorial_id", handler.Updatetutorial)
+	e.DELETE("/tutorials/:tutorial_id", handler.DeleteTutorial)
 }
 
 func (h *TutorialHandler) GetDetailTutorial(c echo.Context) error {
@@ -111,6 +112,24 @@ func (h *TutorialHandler) Updatetutorial(c echo.Context) error {
 	}
 
 	err := h.tutorialUsecase.UpdateTutorial(ctx, tutorialsData)
+	if err != nil {
+		return utils.ErrorResponse(c, err, map[string]interface{}{})
+	}
+
+	return utils.SuccessResponse(c, constant.SuccessUpdateData, "")
+
+}
+
+func (h *TutorialHandler) DeleteTutorial(c echo.Context) error {
+	ctx := c.Request().Context()
+
+	tutorialId := c.Param("tutorial_id")
+
+	tutorialsData := model.Tutorials{
+		Id: tutorialId,
+	}
+
+	err := h.tutorialUsecase.DeleteTutorial(ctx, tutorialsData)
 	if err != nil {
 		return utils.ErrorResponse(c, err, map[string]interface{}{})
 	}

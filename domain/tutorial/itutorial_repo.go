@@ -11,4 +11,5 @@ type TutorialRepoInterface interface {
 	GetTutorials(ctx context.Context, tutorialTypeId string) (ret []model.Tutorials, err error)
 	AddTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 	UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
+	DeleteTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 }

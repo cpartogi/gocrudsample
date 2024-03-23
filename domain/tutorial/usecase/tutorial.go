@@ -144,6 +144,11 @@ func (u *TutorialUsecase) AddTutorial(ctx context.Context, tutorial model.Tutori
 func (u *TutorialUsecase) UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
 
 	// validation
+	_, err = uuid.Parse(tutorial.Id)
+	if err != nil {
+		return constant.ErrInvalidUuid
+	}
+
 	_, err = uuid.Parse(tutorial.TutorialTypeId)
 	if err != nil {
 		return constant.ErrInvalidUuid
@@ -175,6 +180,29 @@ func (u *TutorialUsecase) UpdateTutorial(ctx context.Context, tutorial model.Tut
 	tutorial.UpdatedBy = &updatedBy
 
 	err = u.tutorialRepo.UpdateTutorial(ctx, tutorial)
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (u *TutorialUsecase) DeleteTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	// validation
+	_, err = uuid.Parse(tutorial.Id)
+	if err != nil {
+		return constant.ErrInvalidUuid
+	}
+
+	deletedAt := time.Now().UTC()
+	deletedBy := "Admin"
+
+	tutorial.DeletedAt = &deletedAt
+	tutorial.DeletedBy = &deletedBy
+
+	err = u.tutorialRepo.DeleteTutorial(ctx, tutorial)
 
 	if err != nil {
 		return

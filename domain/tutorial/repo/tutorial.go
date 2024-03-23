@@ -9,6 +9,7 @@ import (
 
 	"gocrudssample/domain/tutorial"
 	"gocrudssample/domain/tutorial/model"
+	"gocrudssample/lib/constant"
 
 	"github.com/go-pg/pg"
 	"github.com/go-redis/redis"
@@ -48,7 +49,12 @@ func (r *TutorialRepo) GetDetailTutorial(ctx context.Context, tutorialId string)
 			err = row.Scan(&ret.Id, &ret.TutorialTypeId, &ret.Keywords, &ret.Sequence, &ret.Title, &ret.Description, &ret.TutorialTypes.TypeName, &ret.CreatedAt, &ret.UpdatedAt)
 
 			if err != nil {
-				return
+
+				if err == sql.ErrNoRows {
+					return ret, constant.ErrNotFound
+				} else {
+					return
+				}
 			}
 
 			expDuration := time.Hour * 1
@@ -202,6 +208,39 @@ func (r *TutorialRepo) UpdateTutorial(ctx context.Context, tutorial model.Tutori
 	}
 
 	_, err = tx.ModelContext(ctx, &tutorial).Column("tutorial_type_id", "keywords", "sequence", "title", "description", "updated_by", "updated_at").WherePK().Update()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// delete redis
+	tutorialKey := `tutorial_%s`
+
+	key := fmt.Sprintf(tutorialKey, tutorial.Id)
+
+	_, err = r.rdb.Del(key).Result()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return
+	}
+
+	return
+
+}
+
+func (r *TutorialRepo) DeleteTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	tx, err := r.gopg.Begin()
+	if err != nil {
+		return
+	}
+
+	_, err = tx.ModelContext(ctx, &tutorial).Column("deleted_by", "deleted_at").WherePK().Update()
 	if err != nil {
 		tx.Rollback()
 		return
