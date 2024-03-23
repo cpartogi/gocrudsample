@@ -19,8 +19,7 @@ func NewTutorialHandler(e *echo.Echo, us tutorial.TutorialUsecaseInterface) {
 		tutorialUsecase: us,
 	}
 
-	router := e.Group("/v1")
-	router.GET("/tutorial/:tutorial_id", handler.GetDetailTutorial)
+	e.GET("/tutorial/:tutorial_id", handler.GetDetailTutorial)
 }
 
 func (h *TutorialHandler) GetDetailTutorial(c echo.Context) error {

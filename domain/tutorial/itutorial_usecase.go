@@ -2,9 +2,9 @@ package tutorial
 
 import (
 	"context"
-	"gocrudssample/domain/tutorial/model"
+	response "gocrudssample/schema/response"
 )
 
 type TutorialUsecaseInterface interface {
-	GetDetailTutorial(ctx context.Context, tutorialId string) (ret model.Tutorials, err error)
+	GetDetailTutorial(ctx context.Context, tutorialId string) (ret response.TutorialDetail, err error)
 }

@@ -18,8 +18,8 @@ type Tutorials struct {
 	Description      string
 	CreatedBy        string
 	CreatedAt        time.Time
-	UpdatedBy        string
-	UpdatedAt        time.Time
+	UpdatedBy        *string
+	UpdatedAt        *time.Time
 	DeletedBy        *string
 	DeletedAt        *time.Time
 	TutorialTypeName string

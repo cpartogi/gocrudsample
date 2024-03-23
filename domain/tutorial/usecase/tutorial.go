@@ -3,8 +3,12 @@ package usecase
 import (
 	"context"
 	"gocrudssample/domain/tutorial"
-	"gocrudssample/domain/tutorial/model"
+	response "gocrudssample/schema/response"
 	"time"
+
+	"gocrudssample/lib/constant"
+
+	"github.com/google/uuid"
 )
 
 type TutorialUsecase struct {
@@ -19,13 +23,35 @@ func NewTutorialUsecase(tutorialRepo tutorial.TutorialRepoInterface, timeout tim
 	}
 }
 
-func (u *TutorialUsecase) GetDetailTutorial(ctx context.Context, tutorialId string) (ret model.Tutorials, err error) {
+func (u *TutorialUsecase) GetDetailTutorial(ctx context.Context, tutorialId string) (res response.TutorialDetail, err error) {
 
-	ret, err = u.tutorialRepo.GetDetailTutorial(ctx, tutorialId)
-
+	_, err = uuid.Parse(tutorialId)
 	if err != nil {
-		return ret, err
+		return res, constant.ErrInvalidUuid
 	}
 
-	return ret, nil
+	ret, err := u.tutorialRepo.GetDetailTutorial(ctx, tutorialId)
+
+	if err != nil {
+		return res, err
+	}
+
+	var lastUpdate time.Time
+	if ret.UpdatedAt != nil {
+		lastUpdate = *ret.UpdatedAt
+	} else {
+		lastUpdate = ret.CreatedAt
+	}
+
+	res = response.TutorialDetail{
+		Id:           ret.Id,
+		Title:        ret.Title,
+		TutorialType: ret.TutorialTypeName,
+		Keywords:     ret.Keywords,
+		Sequence:     ret.Sequence,
+		Description:  ret.Description,
+		LastUpdate:   lastUpdate.Format(time.RFC3339),
+	}
+
+	return res, nil
 }

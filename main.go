@@ -36,6 +36,10 @@ func main() {
 
 	defer dbWrite.Close()
 
+	rdb := appInit.NewRedisClient()
+
+	defer rdb.Close()
+
 	// init router
 	e := echo.New()
 
@@ -52,7 +56,7 @@ func main() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	//DI: Repository & Usecase
-	tutorialRepo := repo.NewTutorialRepo(dbRead.DB, dbWrite)
+	tutorialRepo := repo.NewTutorialRepo(dbRead.DB, dbWrite, rdb)
 
 	tutorialUc := usecase.NewTutorialUsecase(tutorialRepo, timeoutContext)
 

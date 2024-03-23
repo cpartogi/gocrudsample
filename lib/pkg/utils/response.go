@@ -96,7 +96,7 @@ func ErrorInternalServerResponse(ctx echo.Context, err error, data interface{}) 
 // ErrorBadRequest returns
 func ErrorBadRequest(ctx echo.Context, err error, data interface{}) error {
 	responseData := response.Base{
-		Status:     "bad request",
+		Status:     "Bad Request",
 		StatusCode: http.StatusBadRequest,
 		Message:    err.Error(),
 		Timestamp:  time.Now().UTC(),
