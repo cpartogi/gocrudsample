@@ -14,8 +14,8 @@ insert into tutorials (id, tutorial_type_id, keywords, "sequence",  title, "desc
 values ('6cf17700-5a52-4b2c-a9d6-9e843efd163e', '93d899ef-b918-4a94-b7fb-c51df7c7e144', 'php, setup', 1, 'Mulai Menggunakan PHP', 'Download PHP terbaru dari website lalu install', now(), 'system');
 
 insert into tutorials (id, tutorial_type_id, keywords, "sequence",  title, "description", created_at, created_by)
-values ('a1cbb992-d507-470b-88a7-ac586c4b9a02', '93d899ef-b918-4a94-b7fb-c51df7c7e144', 'javascript, setup', 1, 'Mulai Menggunakan JavaScript', 'Download JavaScript terbaru dari website lalu install', now(), 'system');
+values ('a1cbb992-d507-470b-88a7-ac586c4b9a02', '5dca5b91-46cf-49c7-b827-e825f7de04ba', 'javascript, setup', 1, 'Mulai Menggunakan JavaScript', 'Download JavaScript terbaru dari website lalu install', now(), 'system');
 
 insert into tutorials (id, tutorial_type_id, keywords, "sequence",  title, "description", created_at, created_by)
-values ('209bd532-5934-4222-a3af-e3ed16d80b6b', '93d899ef-b918-4a94-b7fb-c51df7c7e144', 'python, setup', 1, 'Mulai Menggunakan Python', 'Download Python terbaru dari website lalu install', now(), 'system');
+values ('209bd532-5934-4222-a3af-e3ed16d80b6b', '89bc2029-1ed4-461c-8c0f-79c9489e04a2', 'python, setup', 1, 'Mulai Menggunakan Python', 'Download Python terbaru dari website lalu install', now(), 'system');
 

@@ -55,3 +55,47 @@ func (u *TutorialUsecase) GetDetailTutorial(ctx context.Context, tutorialId stri
 
 	return res, nil
 }
+
+func (u *TutorialUsecase) GetTutorialTypes(ctx context.Context) (res []response.TutorialTypes, err error) {
+
+	ret, err := u.tutorialRepo.GetTutorialTypes(ctx)
+
+	if err != nil {
+		return res, err
+	}
+
+	for _, rt := range ret {
+		res = append(res, response.TutorialTypes{
+			Id:       rt.Id,
+			TypeName: rt.TypeName,
+		})
+	}
+
+	return
+}
+
+func (u *TutorialUsecase) GetTutorials(ctx context.Context, tutorialTypeId string) (res []response.TutorialList, err error) {
+
+	if tutorialTypeId != "" {
+		_, err = uuid.Parse(tutorialTypeId)
+		if err != nil {
+			return res, constant.ErrInvalidUuid
+		}
+	}
+
+	ret, err := u.tutorialRepo.GetTutorials(ctx, tutorialTypeId)
+
+	if err != nil {
+		return res, err
+	}
+
+	for _, rt := range ret {
+		res = append(res, response.TutorialList{
+			Id:           rt.Id,
+			Title:        rt.Title,
+			TutorialType: rt.TutorialTypeName,
+		})
+	}
+
+	return
+}

@@ -51,7 +51,7 @@ func (r *TutorialRepo) GetDetailTutorial(ctx context.Context, tutorialId string)
 				return
 			}
 
-			expDuration := time.Hour * 2
+			expDuration := time.Hour * 1
 			b, err := json.Marshal(ret)
 			if err != nil {
 				return ret, err
@@ -75,5 +75,121 @@ func (r *TutorialRepo) GetDetailTutorial(ctx context.Context, tutorialId string)
 			return ret, err
 		}
 	}
-	return ret, nil
+	return
+}
+
+func (r *TutorialRepo) GetTutorialTypes(ctx context.Context) (ret []model.TutorialTypes, err error) {
+	//check redis
+	key := `tutorialTypes`
+
+	var res string
+	cr := r.rdb.Get(key)
+	if err = cr.Err(); err != nil {
+
+		if err == redis.Nil {
+
+			query := `SELECT id, type_name FROM tutorial_types WHERE deleted_at is null`
+
+			rows, err := r.db.QueryContext(ctx, query)
+
+			if err != nil {
+				return ret, err
+			}
+
+			defer rows.Close()
+
+			for rows.Next() {
+				var resp model.TutorialTypes
+				err = rows.Scan(&resp.Id, &resp.TypeName)
+
+				if err != nil {
+					return ret, err
+				}
+
+				ret = append(ret, resp)
+
+			}
+
+			expDuration := time.Hour * 1
+			b, err := json.Marshal(ret)
+			if err != nil {
+				return ret, err
+			}
+
+			err = r.rdb.Set(key, b, expDuration).Err()
+			if err != nil {
+				return ret, err
+			}
+
+		}
+	} else {
+
+		res, err = cr.Result()
+		if err != nil {
+			return
+		}
+
+		err = json.Unmarshal([]byte(res), &ret)
+		if err != nil {
+			return ret, err
+		}
+	}
+	return
+}
+
+func (r *TutorialRepo) GetTutorials(ctx context.Context, tutorialTypeId string) (ret []model.Tutorials, err error) {
+
+	var query string
+	var rows *sql.Rows
+
+	if tutorialTypeId != "" {
+		query = `SELECT t.id, t.title, ttype.type_name FROM tutorials t, tutorial_types ttype WHERE t.tutorial_type_id = ttype.id AND t.tutorial_type_id = $1 AND t.deleted_at is null ORDER BY t.sequence, ttype.type_name `
+
+		rows, err = r.db.QueryContext(ctx, query, tutorialTypeId)
+	} else {
+		query = `SELECT t.id, t.title, ttype.type_name FROM tutorials t, tutorial_types ttype WHERE t.tutorial_type_id = ttype.id AND t.deleted_at is null ORDER BY t.sequence `
+
+		rows, err = r.db.QueryContext(ctx, query)
+	}
+
+	if err != nil {
+		return ret, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var resp model.Tutorials
+		err = rows.Scan(&resp.Id, &resp.Title, &resp.TutorialTypeName)
+
+		if err != nil {
+			return ret, err
+		}
+
+		ret = append(ret, resp)
+
+	}
+
+	return
+}
+
+func (r *TutorialRepo) AddTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	tx, err := r.gopg.Begin()
+	if err != nil {
+		return
+	}
+
+	_, err = tx.ModelContext(ctx, &tutorial).Insert()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return
+	}
+
+	return
 }
