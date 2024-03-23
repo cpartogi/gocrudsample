@@ -25,6 +25,10 @@ func CommonError(err error) (int, error) {
 		return commonErrorMap[constant.ErrBadRequest], constant.ErrBadRequest
 	case constant.ErrInvalidUuid:
 		return commonErrorMap[constant.ErrBadRequest], constant.ErrInvalidUuid
+	case constant.ErrTitle:
+		return commonErrorMap[constant.ErrBadRequest], constant.ErrTitle
+	case constant.ErrTypeNotFound:
+		return commonErrorMap[constant.ErrBadRequest], constant.ErrTypeNotFound
 	}
 	return http.StatusInternalServerError, fmt.Errorf(err.Error())
 }

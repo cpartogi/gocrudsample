@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"gocrudssample/domain/tutorial"
+	"gocrudssample/domain/tutorial/model"
 	response "gocrudssample/schema/response"
 	"time"
 
@@ -46,7 +47,7 @@ func (u *TutorialUsecase) GetDetailTutorial(ctx context.Context, tutorialId stri
 	res = response.TutorialDetail{
 		Id:           ret.Id,
 		Title:        ret.Title,
-		TutorialType: ret.TutorialTypeName,
+		TutorialType: ret.TutorialTypes.TypeName,
 		Keywords:     ret.Keywords,
 		Sequence:     ret.Sequence,
 		Description:  ret.Description,
@@ -93,8 +94,90 @@ func (u *TutorialUsecase) GetTutorials(ctx context.Context, tutorialTypeId strin
 		res = append(res, response.TutorialList{
 			Id:           rt.Id,
 			Title:        rt.Title,
-			TutorialType: rt.TutorialTypeName,
+			TutorialType: rt.TutorialTypes.TypeName,
 		})
+	}
+
+	return
+}
+
+func (u *TutorialUsecase) AddTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	// validation
+	_, err = uuid.Parse(tutorial.TutorialTypeId)
+	if err != nil {
+		return constant.ErrInvalidUuid
+	}
+
+	tutorialTypes, _ := u.tutorialRepo.GetTutorialTypes(ctx)
+
+	mapTutorialType := map[string]*model.TutorialTypes{}
+
+	for _, ttype := range tutorialTypes {
+		mapTutorialType[ttype.Id] = &model.TutorialTypes{
+			Id:       ttype.Id,
+			TypeName: ttype.TypeName,
+		}
+	}
+
+	if mapTutorialType[tutorial.TutorialTypeId] == nil {
+		return constant.ErrTypeNotFound
+	}
+
+	if tutorial.Title == "" {
+		return constant.ErrTitle
+	}
+
+	tutorial.Id = uuid.New().String()
+	tutorial.CreatedAt = time.Now().UTC()
+	tutorial.CreatedBy = "Admin"
+
+	err = u.tutorialRepo.AddTutorial(ctx, tutorial)
+
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+func (u *TutorialUsecase) UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	// validation
+	_, err = uuid.Parse(tutorial.TutorialTypeId)
+	if err != nil {
+		return constant.ErrInvalidUuid
+	}
+
+	tutorialTypes, _ := u.tutorialRepo.GetTutorialTypes(ctx)
+
+	mapTutorialType := map[string]*model.TutorialTypes{}
+
+	for _, ttype := range tutorialTypes {
+		mapTutorialType[ttype.Id] = &model.TutorialTypes{
+			Id:       ttype.Id,
+			TypeName: ttype.TypeName,
+		}
+	}
+
+	if mapTutorialType[tutorial.TutorialTypeId] == nil {
+		return constant.ErrTypeNotFound
+	}
+
+	if tutorial.Title == "" {
+		return constant.ErrTitle
+	}
+
+	updatedAt := time.Now().UTC()
+	updatedBy := "Admin"
+
+	tutorial.UpdatedAt = &updatedAt
+	tutorial.UpdatedBy = &updatedBy
+
+	err = u.tutorialRepo.UpdateTutorial(ctx, tutorial)
+
+	if err != nil {
+		return
 	}
 
 	return

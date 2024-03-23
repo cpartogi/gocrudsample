@@ -45,7 +45,7 @@ func (r *TutorialRepo) GetDetailTutorial(ctx context.Context, tutorialId string)
 
 			row := r.db.QueryRowContext(ctx, query, tutorialId)
 
-			err = row.Scan(&ret.Id, &ret.TutorialTypeId, &ret.Keywords, &ret.Sequence, &ret.Title, &ret.Description, &ret.TutorialTypeName, &ret.CreatedAt, &ret.UpdatedAt)
+			err = row.Scan(&ret.Id, &ret.TutorialTypeId, &ret.Keywords, &ret.Sequence, &ret.Title, &ret.Description, &ret.TutorialTypes.TypeName, &ret.CreatedAt, &ret.UpdatedAt)
 
 			if err != nil {
 				return
@@ -160,7 +160,7 @@ func (r *TutorialRepo) GetTutorials(ctx context.Context, tutorialTypeId string) 
 
 	for rows.Next() {
 		var resp model.Tutorials
-		err = rows.Scan(&resp.Id, &resp.Title, &resp.TutorialTypeName)
+		err = rows.Scan(&resp.Id, &resp.Title, &resp.TutorialTypes.TypeName)
 
 		if err != nil {
 			return ret, err
@@ -192,4 +192,37 @@ func (r *TutorialRepo) AddTutorial(ctx context.Context, tutorial model.Tutorials
 	}
 
 	return
+}
+
+func (r *TutorialRepo) UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error) {
+
+	tx, err := r.gopg.Begin()
+	if err != nil {
+		return
+	}
+
+	_, err = tx.ModelContext(ctx, &tutorial).Column("tutorial_type_id", "keywords", "sequence", "title", "description", "updated_by", "updated_at").WherePK().Update()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// delete redis
+	tutorialKey := `tutorial_%s`
+
+	key := fmt.Sprintf(tutorialKey, tutorial.Id)
+
+	_, err = r.rdb.Del(key).Result()
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
+		return
+	}
+
+	return
+
 }

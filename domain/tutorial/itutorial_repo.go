@@ -10,4 +10,5 @@ type TutorialRepoInterface interface {
 	GetTutorialTypes(ctx context.Context) (ret []model.TutorialTypes, err error)
 	GetTutorials(ctx context.Context, tutorialTypeId string) (ret []model.Tutorials, err error)
 	AddTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
+	UpdateTutorial(ctx context.Context, tutorial model.Tutorials) (err error)
 }
