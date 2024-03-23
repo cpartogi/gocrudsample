@@ -109,7 +109,11 @@ func (u *TutorialUsecase) AddTutorial(ctx context.Context, tutorial model.Tutori
 		return constant.ErrInvalidUuid
 	}
 
-	tutorialTypes, _ := u.tutorialRepo.GetTutorialTypes(ctx)
+	tutorialTypes, err := u.tutorialRepo.GetTutorialTypes(ctx)
+
+	if err != nil {
+		return
+	}
 
 	mapTutorialType := map[string]*model.TutorialTypes{}
 
@@ -154,7 +158,11 @@ func (u *TutorialUsecase) UpdateTutorial(ctx context.Context, tutorial model.Tut
 		return constant.ErrInvalidUuid
 	}
 
-	tutorialTypes, _ := u.tutorialRepo.GetTutorialTypes(ctx)
+	tutorialTypes, err := u.tutorialRepo.GetTutorialTypes(ctx)
+
+	if err != nil {
+		return
+	}
 
 	mapTutorialType := map[string]*model.TutorialTypes{}
 
@@ -217,6 +225,10 @@ func (u *TutorialUsecase) PatchTutorial(ctx context.Context, tutorial model.Tuto
 	_, err = uuid.Parse(tutorial.Id)
 	if err != nil {
 		return constant.ErrInvalidUuid
+	}
+
+	if tutorial.Title == "" {
+		return constant.ErrTitle
 	}
 
 	updatedAt := time.Now().UTC()

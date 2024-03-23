@@ -1,5 +1,6 @@
 mock-gen:
 	mockery --dir domain/tutorial --name TutorialUsecaseInterface --filename itutorial_usecase.go --output domain/tutorial/mocks --with-expecter
+	mockery --dir domain/tutorial --name TutorialRepoInterface --filename itutorial_repo.go --output domain/tutorial/mocks --with-expecter
 
 test:
 	go test -v -cover ./...
