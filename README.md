@@ -33,6 +33,12 @@ make migration-up
 make run
 ```
 
+6. Using postman, open application with address : 
+```bash 
+localhost:7100/tutorials/
+```
+
+
 ## How to run unit test
 1. Generate mock  with : 
 ```bash 
